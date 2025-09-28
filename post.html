@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規投稿 - スクールヘルパー</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🏫 スクールヘルパー</h1>
+        <p>新しい困りごとを投稿</p>
+    </header>
+
+    <main>
+        <section class="post-form-section">
+            <button class="back-btn" onclick="location.href='index.html'">
+                ← メイン画面に戻る
+            </button>
+
+            <form id="post-form" class="post-form">
+                <div class="form-group">
+                    <label for="title">困りごとのタイトル:</label>
+                    <input type="text" id="title" name="title" placeholder="例: 体育館の予約が重複してしまう" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">困りごとの詳細:</label>
+                    <textarea id="content" name="content" rows="6" placeholder="困りごとの詳しい内容を入力してください..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="author">お名前（先生名）:</label>
+                    <input type="text" id="author" name="author" placeholder="例: 田中先生" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">📝 投稿する</button>
+                    <button type="reset" class="reset-btn">🔄 リセット</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 スクールヘルパー</p>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>

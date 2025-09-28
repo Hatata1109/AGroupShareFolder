@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>20年後に家族が幸せになる住まぁE��街づくり</title>
+
+  <script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+  crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript">
+   $(function(){
+      // ▼マウスが載ったらサブメニューを表示
+      $("ul.ddmenu li").mouseenter(function(){
+         $(this).siblings().find("ul").hide();  // 允E��要�&#63728;に含まれるサブメニューを�E部消す、E
+         $(this).children().slideDown(150);     // 自刁E�Eサブメニューを表示する、E
+      });
+      // ▼どこかがクリチE��されたらサブメニューを消す
+      $('html').click(function() {
+         $('ul.ddmenu ul').slideUp(150);
+      });
+   });
+</script>
+</head>
+<body>
+<ul class="ddmenu">
+   <li style="left: 1px; top: 5px"><a href="#">
+   <img src="./img/Open-house.png" height="33" width="24"></a></li>
+   <li><a href="#">ニュース</a>
+      <ul>
+         <li><a href="#">新製品E&raquo;</a>
+            <ul>
+               <li><a href="#">ハ�Eドウェア</a></li>
+               <li><a href="#">ソフトウェア</a></li>
+            </ul>
+         </li></li>
+         <li><a href="#">新サービス</a></li>
+         <li><a href="#">弊社につぁE��</a></li>
+      </ul>
+   </li>
+   <li><a href="#">製品�E技衁E/a>
+      <ul>
+         <li><a href="#">ハ�Eドウェア &raquo;</a>
+            <ul>
+               <li><a href="#">法人向け</a></li>
+               <li><a href="#">個人向け</a></li>
+            </ul>
+         </li>
+         <li><a href="#">ソフトウェア &raquo;</a>
+            <ul>
+               <li><a href="#">for Windows</a></li>
+               <li><a href="#">for Mac</a></li>
+               <li><a href="#">for Android</a></li>
+               <li><a href="#">for iOS</a></li>
+               <li><a href="#">そ�E仁E/a></li>
+            </ul>
+         </li>
+         <li><a href="#">ウェブサービス</a></li>
+      </ul>
+   </li>
+   <li><a href="#">会社惁E&#63728;�</a>
+      <ul>
+         <li><a href="#">会社概要E&raquo;</a>
+            <ul>
+               <li><a href="#">グループ概要E/a></li>
+               <li><a href="#">本社概要E/a></li>
+            </ul>
+         </li>
+         <li><a href="#">社長挨拶</a></li>
+         <li><a href="#">沿革</a></li>
+         <li><a href="#">所在地 &raquo;</a>
+            <ul>
+               <li><a href="#">本社</a></li>
+               <li><a href="#">支社</a></li>
+            </ul>
+         </li>
+      </ul>
+   </li>
+   <li><a href="#">お問ぁE��わせ</a>
+      <ul class="sub">
+         <li><a href="#">よくあるご質啁E&raquo;</a>
+            <ul>
+               <li><a href="#">サービスに関して</a></li>
+               <li><a href="#">弊社に関して</a></li>
+               <li><a href="#">そ�E仁E/a></li>
+            </ul>
+         </li>
+         <li>
+            <a href="#">お問ぁE��わせ允E&raquo;</a>
+            <ul>
+               <li><a href="#">大阪本社</a></li>
+               <li><a href="#">支社 &raquo;</a>
+               <ul>
+                  <li><a href="#">神戸支社</a></li>
+                  <li><a href="#">京都営業所</a></li>
+                  <li><a href="#">奈良営業所</a></li>
+               </ul>
+            </li>
+            </ul>
+         </li>
+      </ul>
+   </li>
+</ul>
+</body>
+</html>

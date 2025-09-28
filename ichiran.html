@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スクールヘルパー</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🏫 スクールヘルパー</h1>
+        <p>学校の困りごとをみんなで解決しよう！</p>
+    </header>
+
+    <main>
+        <section class="action-section">
+            <button class="post-btn" onclick="location.href='post.html'">
+                📝 新しい困りごとを投稿
+            </button>
+        </section>
+
+        <section class="posts-section">
+            <h2>📋 困りごと一覧</h2>
+            <div id="posts-container">
+                <!-- ここに困りごと一覧が表示される -->
+                <div class="loading-container">
+                    <div class="loading-spinner-large"></div>
+                    読み込み中...
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 スクールヘルパー</p>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>
