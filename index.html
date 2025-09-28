@@ -11,12 +11,10 @@
   <link rel="stylesheet" href="style.css">
   <script type="text/javascript">
    $(function(){
-      // 笆ｼ繝槭え繧ｹ縺瑚ｼ峨▲縺溘ｉ繧ｵ繝悶Γ繝九Η繝ｼ繧定｡ｨ遉ｺ
       $("ul.ddmenu li").mouseenter(function(){
-         $(this).siblings().find("ul").hide();  // 蜈・ｼ溯ｦ∫ｴ&#63728;縺ｫ蜷ｫ縺ｾ繧後ｋ繧ｵ繝悶Γ繝九Η繝ｼ繧貞・驛ｨ豸医☆縲・
-         $(this).children().slideDown(150);     // 閾ｪ蛻・・繧ｵ繝悶Γ繝九Η繝ｼ繧定｡ｨ遉ｺ縺吶ｋ縲・
-      });
-      // 笆ｼ縺ｩ縺薙°縺後け繝ｪ繝・け縺輔ｌ縺溘ｉ繧ｵ繝悶Γ繝九Η繝ｼ繧呈ｶ医☆
+         $(this).siblings().find("ul").hide();
+         $(this).children().slideDown(150);
+      })}
       $('html').click(function() {
          $('ul.ddmenu ul').slideUp(150);
       });
