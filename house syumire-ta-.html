@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open House 社内向け土地・家シミュレーター 完全版</title>
+<style>
+body { margin:0; font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI",Meiryo,sans-serif; background:#f5f8fa; color:#222; }
+header { background:#27c4a3; color:#fff; padding:12px 20px; text-align:center; font-size:22px; font-weight:bold; }
+#controls { display:flex; flex-wrap:wrap; gap:12px; padding:12px 20px; background:#e0f0ec; align-items:flex-end; }
+#controls > div { display:flex; flex-direction:column; }
+label { font-size:12px; margin-bottom:4px; }
+input, select { padding:4px 6px; border-radius:6px; border:1px solid #ccc; }
+button { padding:6px 10px; border-radius:6px; border:none; cursor:pointer; background:#27c4a3; color:#fff; font-weight:bold; }
+#canvasWrapper { position:relative; margin:20px; border:1px solid #ccc; background:#fff; }
+canvas { display:block; background:#f0f0f0; }
+#log { margin:20px; padding:12px; background:#fff; border:1px solid #ccc; height:140px; overflow:auto; font-size:12px; }
+#daylightInfo { margin:20px; padding:12px; background:#fff; border:1px solid #ccc; height:60px; font-size:12px; }
+#tooltip { position:absolute; background:#333; color:#fff; padding:4px 8px; border-radius:6px; font-size:12px; pointer-events:none; display:none; z-index:10; }
+
+/* 色分け */
+.room { fill:#ffcc66; stroke:#555; }
+.garden { fill:#88cc88; stroke:#558844; }
+.parking { fill:#cccccc; stroke:#888888; }
+</style>
+</head>
+<body>
+<header>Open House 社内向け土地・家シミュレーター 完全版</header>
+<div id="controls">
+  <div>
+    <label>描画モード</label>
+    <select id="drawMode"><option value="preset">プリセット</option><option value="free">自由描画</option></select>
+  </div>
+  <div>
+    <label>プリセット形状</label>
+    <select id="presetShape"><option value="rectangle">長方形</option><option value="L">L字</option><option value="triangle">三角形</option></select>
+  </div>
+  <div><label>土地幅(m)</label><input type="number" id="landWidth" value="20"></div>
+  <div><label>土地奥行(m)</label><input type="number" id="landHeight" value="15"></div>
+  <div><label>方位</label><select id="orientation"><option value="N">北</option><option value="E">東</option><option value="S">南</option><option value="W">西</option></select></div>
+  <div><label>部屋数</label><input type="number" id="rooms" value="4"></div>
+  <div><label>階数</label><input type="number" id="floors" value="2"></div>
+  <div><label>バリアフリー</label><select id="barrierFree"><option value="yes">あり</option><option value="no">なし</option></select></div>
+  <div><label>日照時間(h)</label><input type="number" id="sunHours" value="5"></div>
+  <div style="align-self:flex-end;"><button id="generateBtn">自動レイアウト生成</button></div>
+</div>
+
+<div id="canvasWrapper"><canvas id="landCanvas" width="900" height="600"></canvas></div>
+<div id="log">操作ログがここに表示されます。</div>
+<div id="daylightInfo">日照シミュレーション: ここに表示されます</div>
+<div id="tooltip"></div>
+
+<script>
+const canvas = document.getElementById('landCanvas');
+const ctx = canvas.getContext('2d');
+const log = document.getElementById('log');
+const daylightInfo = document.getElementById('daylightInfo');
+const tooltip = document.getElementById('tooltip');
+
+let drawMode='preset', isDrawing=false, freePoints=[], roomsData=[], roomNotes={}, futurePlans=[], dragTarget=null;
+
+function logMsg(msg){ log.innerHTML += msg+'<br>'; log.scrollTop=log.scrollHeight; }
+
+document.getElementById('drawMode').addEventListener('change', e=>{
+  drawMode=e.target.value; freePoints=[]; drawCanvas(); logMsg('描画モード:'+drawMode);
+});
+
+// Canvas描画
+function drawCanvas(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#c0e5d9';
+  ctx.fillRect(50,50,800,500);
+  drawPreset(); drawFree();
+}
+function drawPreset(){
+  if(drawMode!=='preset') return;
+  const shape=document.getElementById('presetShape').value;
+  ctx.fillStyle='#27c4a3';
+  switch(shape){
+    case 'rectangle': ctx.fillRect(200,150,500,350); break;
+    case 'L': ctx.fillRect(200,150,350,200); ctx.fillRect(200,350,150,150); break;
+    case 'triangle': ctx.beginPath(); ctx.moveTo(450,150); ctx.lineTo(650,450); ctx.lineTo(250,450); ctx.closePath(); ctx.fill(); break;
+  }
+}
+function drawFree(){
+  if(freePoints.length>0){ ctx.fillStyle='#27c4a3'; ctx.beginPath();
+    ctx.moveTo(freePoints[0].x,freePoints[0].y);
+    for(let i=1;i<freePoints.length;i++) ctx.lineTo(freePoints[i].x,freePoints[i].y);
+    ctx.closePath(); ctx.fill();
+  }
+}
+
+// Canvasマウス操作
+canvas.addEventListener('mousedown', e=>{
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  if(drawMode==='free'){ isDrawing=true; freePoints.push({x:mx,y:my}); drawCanvas(); return; }
+  // 部屋・庭・駐車場ドラッグ開始
+  dragTarget=null;
+  roomsData.forEach(r=>{
+    if(mx>r.x && mx<r.x+r.width && my>r.y && my<r.y+r.height) dragTarget={type:'room', room:r, offsetX:mx-r.x, offsetY:my-r.y};
+    else if(r.hasGarden && mx>r.x+r.width+5 && mx<r.x+r.width+35 && my>r.y && my<r.y+r.height) dragTarget={type:'garden', room:r, offsetX:mx-(r.x+r.width+5), offsetY:my-r.y};
+    else if(r.hasParking && mx>r.x && mx<r.x+r.width && my>r.y+r.height+5 && my<r.y+r.height+25) dragTarget={type:'parking', room:r, offsetX:mx-r.x, offsetY:my-(r.y+r.height+5)};
+  });
+});
+canvas.addEventListener('mousemove', e=>{
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  // ツールチップ
+  let hover=false;
+  roomsData.forEach(r=>{
+    if(mx>r.x && mx<r.x+r.width && my>r.y && my<r.y+r.height){ tooltip.style.left=e.clientX+10+'px'; tooltip.style.top=e.clientY+10+'px'; tooltip.innerHTML=`${r.id}<br>部屋`; tooltip.style.display='block'; hover=true; }
+    else if(r.hasGarden && mx>r.x+r.width+5 && mx<r.x+r.width+35 && my>r.y && my<r.y+r.height){ tooltip.style.left=e.clientX+10+'px'; tooltip.style.top=e.clientY+10+'px'; tooltip.innerHTML=`${r.id}の庭`; tooltip.style.display='block'; hover=true; }
+    else if(r.hasParking && mx>r.x && mx<r.x+r.width && my>r.y+r.height+5 && my<r.y+r.height+25){ tooltip.style.left=e.clientX+10+'px'; tooltip.style.top=e.clientY+10+'px'; tooltip.innerHTML=`${r.id}の駐車場`; tooltip.style.display='block'; hover=true; }
+  });
+  if(!hover) tooltip.style.display='none';
+  // ドラッグ
+  if(dragTarget){
+    if(dragTarget.type==='room'){ dragTarget.room.x=mx-dragTarget.offsetX; dragTarget.room.y=my-dragTarget.offsetY; }
+    else if(dragTarget.type==='garden'){ dragTarget.room.x=mx-dragTarget.offsetX-dragTarget.room.width+5; dragTarget.room.y=my-dragTarget.offsetY; }
+    else if(dragTarget.type==='parking'){ dragTarget.room.x=mx-dragTarget.offsetX; dragTarget.room.y=my-dragTarget.offsetY-dragTarget.room.height+5; }
+    drawAll(); drawRoomLabels(); drawNotes(); checkOverlap(); calcDistances();
+  }
+});
+canvas.addEventListener('mouseup', ()=>{ dragTarget=null; });
+canvas.addEventListener('mouseleave', ()=>{ dragTarget=null; });
+
+// 部屋作成
+function createRoom(x,y,w,h,id){ return {x:x,y:y,width:w,height:h,id:id,hasGarden:false,hasParking:false}; }
+function autoLayout(){
+  roomsData=[]; const rooms=parseInt(document.getElementById('rooms').value);
+  for(let i=0;i<rooms;i++){ const x=100+Math.random()*700; const y=100+Math.random()*400; roomsData.push(createRoom(x,y,50,50,'R'+i)); }
+}
+
+// 部屋描画
+function drawRooms(){ roomsData.forEach(r=>{
+  ctx.fillStyle=r.hasGarden?'#88cc88':r.hasParking?'#cccccc':'#ffcc66'; ctx.fillRect(r.x,r.y,r.width,r.height);
+  ctx.strokeStyle='#555'; ctx.strokeRect(r.x,r.y,r.width,r.height);
+}); }
+
+// 家の形状・庭・駐車場
+function autoHouseLayout(){ roomsData.forEach(r=>{
+  if(Math.random()<0.5){ r.hasGarden=true; ctx.fillStyle='#88cc88'; ctx.fillRect(r.x+r.width+5,r.y,30,r.height); ctx.strokeStyle='#558844'; ctx.strokeRect(r.x+r.width+5,r.y,30,r.height); }
+  if(Math.random()<0.3){ r.hasParking=true; ctx.fillStyle='#cccccc'; ctx.fillRect(r.x,r.y+r.height+5,r.width,20); ctx.strokeStyle='#888'; ctx.strokeRect(r.x,r.y+r.height+5,r.width,20); }
+}); }
+
+// 日当たり計算
+function calcDaylight(){ const orientation=document.getElementById('orientation').value;
+  let factor=1.0; switch(orientation){ case'N': factor=0.8; break; case'E': factor=1.0; break; case'S': factor=1.2; break; case'W': factor=1.0; break; }
+  daylightInfo.innerHTML='予測日照時間: '+(parseFloat(document.getElementById('sunHours').value)*factor).toFixed(1)+'時間';
+}
+
+// 部屋ラベル
+function drawRoomLabels(){ ctx.fillStyle='#000'; ctx.font='14px Arial'; roomsData.forEach(r=>{ ctx.fillText(r.id,r.x+5,r.y+20); }); }
+
+// メモ機能
+function addNote(roomId){ const note=prompt('メモ入力: '+roomId,roomNotes[roomId]||''); if(note!==null){ roomNotes[roomId]=note; logMsg('メモ保存: '+roomId+' -> '+note); } }
+function drawNotes(){ ctx.fillStyle='#000'; ctx.font='12px Arial'; for(const id in roomNotes){ const r=roomsData.find(r=>r.id===id); if(r) ctx.fillText(roomNotes[id], r.x, r.y+r.height+15); } }
+
+// 重なりチェック
+function checkOverlap(){ let overlaps=[]; for(let i=0;i<roomsData.length;i++){ const a=roomsData[i]; for(let j=i+1;j<roomsData.length;j++){ const b=roomsData[j]; if(!(a.x+a.width<b.x||a.x>b.x+b.width||a.y+a.height<b.y||a.y>b.y+b.height)) overlaps.push([a.id,b.id]); } } overlaps.length>0?logMsg('重なり警告: '+overlaps.map(p=>'['+p[0]+'-'+p[1]+']').join(',')):logMsg('重なりなし'); }
+
+// 距離計算
+function calcDistances(){ for(let i=0;i<roomsData.length;i++){ for(let j=i+1;j<roomsData.length;j++){ const a=roomsData[i],b=roomsData[j]; const dx=Math.max(0,Math.max(b.x-(a.x+a.width),a.x-(b.x+b.width))), dy=Math.max(0,Math.max(b.y-(a.y+a.height),a.y-(b.y+b.height))); logMsg(a.id+'-'+b.id+'距離: '+Math.sqrt(dx*dx+dy*dy).toFixed(1)+'px'); } } }
+
+// 保存・呼び出し
+function saveScenario(name){ const scenario={ drawMode, orientation:document.getElementById('orientation').value, rooms:parseInt(document.getElementById('rooms').value), floors:parseInt(document.getElementById('floors').value), barrierFree:document.getElementById('barrierFree').value, sunHours:parseFloat(document.getElementById('sunHours').value), roomsData, roomNotes }; localStorage.setItem('OH_'+name, JSON.stringify(scenario)); logMsg('シナリオ「'+name+'」保存'); }
+function loadScenario(name){ const data=localStorage.getItem('OH_'+name); if(data){ const s=JSON.parse(data); drawMode=s.drawMode; document.getElementById('drawMode').value=drawMode; document.getElementById('orientation').value=s.orientation; document.getElementById('rooms').value=s.rooms; document.getElementById('floors').value=s.floors; document.getElementById('barrierFree').value=s.barrierFree; document.getElementById('sunHours').value=s.sunHours; roomsData=s.roomsData; roomNotes=s.roomNotes; drawAll(); drawRoomLabels(); drawNotes(); calcDaylight(); logMsg('シナリオ「'+name+'」読み込み'); } else logMsg('シナリオ存在なし'); }
+
+// 将来プラン
+function saveFuturePlan(name){ futurePlans.push({name:name, plan:{drawMode, orientation:document.getElementById('orientation').value, roomsData:JSON.parse(JSON.stringify(roomsData)), roomNotes:JSON.parse(JSON.stringify(roomNotes)), sunHours:parseFloat(document.getElementById('sunHours').value)}}); logMsg('将来プラン「'+name+'」保存'); }
+function loadFuturePlan(name){ const fp=futurePlans.find(p=>p.name===name); if(fp){ const p=fp.plan; drawMode=p.drawMode; document.getElementById('drawMode').value=drawMode; document.getElementById('orientation').value=p.orientation; roomsData=p.roomsData; roomNotes=p.roomNotes; document.getElementById('sunHours').value=p.sunHours; drawAll(); drawRoomLabels(); drawNotes(); calcDaylight(); logMsg('将来プラン「'+name+'」読み込み'); } else logMsg('プラン存在なし'); }
+
+// 印刷
+function printLayout(){ const w=window.open(''); w.document.write('<img src="'+canvas.toDataURL()+'" style="width:100%">'); w.print(); }
+
+// 全描画まとめ
+function drawAll(){ drawCanvas(); drawRooms(); autoHouseLayout(); drawRoomLabels(); drawNotes(); calcDaylight(); }
+
+// ボタン追加
+const saveBtn=document.createElement('button'); saveBtn.textContent='シナリオ保存'; saveBtn.onclick=()=>{ const name=prompt('シナリオ名'); if(name) saveScenario(name); }; document.getElementById('controls').appendChild(saveBtn);
+const loadBtn=document.createElement('button'); loadBtn.textContent='シナリオ読み込み'; loadBtn.onclick=()=>{ const name=prompt('読み込むシナリオ名'); if(name) loadScenario(name); }; document.getElementById('controls').appendChild(loadBtn);
+const saveFutureBtn=document.createElement('button'); saveFutureBtn.textContent='将来プラン保存'; saveFutureBtn.onclick=()=>{ const name=prompt('プラン名'); if(name) saveFuturePlan(name); }; document.getElementById('controls').appendChild(saveFutureBtn);
+const loadFutureBtn=document.createElement('button'); loadFutureBtn.textContent='将来プラン読み込み'; loadFutureBtn.onclick=()=>{ const name=prompt('プラン名'); if(name) loadFuturePlan(name); }; document.getElementById('controls').appendChild(loadFutureBtn);
+const printBtn=document.createElement('button'); printBtn.textContent='レイアウト印刷'; printBtn.onclick=printLayout; document.getElementById('controls').appendChild(printBtn);
+
+// 自動生成ボタン更新
+document.getElementById('generateBtn').addEventListener('click', ()=>{
+  autoLayout(); drawAll(); drawRoomLabels(); drawNotes(); checkOverlap(); calcDistances(); logMsg('自動レイアウト生成完了'); });
+
+// 初期描画
+drawAll();
+</script>
+</body>
+</html>
