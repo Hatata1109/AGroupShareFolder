@@ -1,2 +1,3 @@
 Aグループの共有フォルダです。ほかのグループが勝手に編集してはいけません！
+
 ©opylight 2025 Agroup. All light reserved.
