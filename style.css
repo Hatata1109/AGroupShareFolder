@@ -1,77 +1,190 @@
 ul.ddmenu {
-   margin: 0px;               /* メニューバー外側の余白(ゼロ) */
-   padding: 0px 0px 0px 15px; /* メニューバー内側の余白(左に15px) */
-   background-image: linear-gradient(90deg, #ff0000, #ffdfdf);
+  margin: 0px; /* メニューバー外側の余白(ゼロ) */
+  padding: 0px 0px 0px 15px; /* メニューバー内側の余白(左に15px) */
+  background-image: linear-gradient(90deg, #ff0000, #ffdfdf);
 }
 ul.ddmenu li {
-   width: 160px;          /* メニュー項目の横幅(125px) */
-   display: inline-block; /* ★横並びに配置する */
-   list-style-type: none; /* ★リストの先頭記号を消す */
-   position: relative;    /* ★サブメニュー表示の基準位置にする */
+  width: 160px; /* メニュー項目の横幅(125px) */
+  display: inline-block; /* ★横並びに配置する */
+  list-style-type: none; /* ★リストの先頭記号を消す */
+  position: relative; /* ★サブメニュー表示の基準位置にする */
 }
 ul.ddmenu a {
-   background-image: linear-gradient(90deg, #ffc996, #ff9e00);
-   color: white;              /* メニュー項目の文字色(白色) */
-   line-height: 50px;         /* メニュー項目のリンクの高さ(40px) */
-   text-align: center;        /* メインメニューの文字列の配置(中央寄せ) */
-   text-decoration: none;     /* メニュー項目の装飾(下線を消す) */
-   font-weight: bold;         /* 太字にする */
-   display: block;            /* ★項目内全域をリンク可能にする */
+  background-image: linear-gradient(90deg, #ffc996, #ff9e00);
+  color: white; /* メニュー項目の文字色(白色) */
+  line-height: 50px; /* メニュー項目のリンクの高さ(40px) */
+  text-align: center; /* メインメニューの文字列の配置(中央寄せ) */
+  text-decoration: none; /* メニュー項目の装飾(下線を消す) */
+  font-weight: bold; /* 太字にする */
+  display: block; /* ★項目内全域をリンク可能にする */
 }
 ul.ddmenu a:hover {
-   background-image: linear-gradient(90deg, #a4ff86, #29ff00);
-   color: #ffffff;            /* メニュー項目にマウスが載ったときの文字色(濃い赤色) */
+  background-image: linear-gradient(90deg, #a4ff86, #29ff00);
+  color: #ffffff; /* メニュー項目にマウスが載ったときの文字色(濃い赤色) */
 }
 ul.ddmenu ul {
-   margin: 0px;        /* ★サブメニュー外側の余白(ゼロ) */
-   padding: 0px;       /* ★サブメニュー内側の余白(ゼロ) */
-   display: none;      /* ★標準では非表示にする */
-   position: absolute; /* ★絶対配置にする */
+  margin: 0px; /* ★サブメニュー外側の余白(ゼロ) */
+  padding: 0px; /* ★サブメニュー内側の余白(ゼロ) */
+  display: none; /* ★標準では非表示にする */
+  position: absolute; /* ★絶対配置にする */
 }
 ul.ddmenu ul li {
-   width: 160px;               /* サブメニュー1項目の横幅(135px) */
-   border-top: 1px solid pink; /* 項目上側の枠線(ピンク色で1pxの実線) */
+  width: 200px; /* サブメニュー1項目の横幅(135px) */
+  border-top: 1px solid pink; /* 項目上側の枠線(ピンク色で1pxの実線) */
 }
 ul.ddmenu ul li a {
-   line-height: 50px;   /* サブメニュー1項目の高さ(35px) */
-   text-align: left;    /* 文字列の配置(左寄せ) */
-   padding-left: 5px;   /* 文字列前方の余白(5px) */
-   font-weight: normal; /* 太字にはしない */
+  line-height: 50px; /* サブメニュー1項目の高さ(35px) */
+  text-align: left; /* 文字列の配置(左寄せ) */
+  padding-left: 5px; /* 文字列前方の余白(5px) */
+  font-weight: normal; /* 太字にはしない */
 }
 ul.ddmenu ul li a:hover {
-   background-image: linear-gradient(90deg, #96b1ff, #005bff);
-   color: #ffffff;            /* サブメニュー項目にマウスが載ったときの文字色(濃い緑色) */
+  background-image: linear-gradient(90deg, #96b1ff, #005bff);
+  color: #ffffff; /* サブメニュー項目にマウスが載ったときの文字色(濃い緑色) */
 }
 ul.ddmenu ul ul {
-   margin: 0px;        /* ★サブメニュー外側の余白(ゼロ) */
-   padding: 0px;       /* ★サブメニュー内側の余白(ゼロ) */
-   display: none;      /* ★標準では非表示にする */
-   position: absolute; /* ★絶対配置にする */
-   top: -1px;          /* 1pxだけ上方向にずらす(※上に1pxの枠線を引いている場合) */
-   left: 100%;         /* ★基準位置からの距離を親ボックスの幅100％にする */
-   border-left: 1px solid pink; /* 左側に引く枠線(ピンク色で1pxの実線) */
+  margin: 0px; /* ★サブメニュー外側の余白(ゼロ) */
+  padding: 0px; /* ★サブメニュー内側の余白(ゼロ) */
+  display: none; /* ★標準では非表示にする */
+  position: absolute; /* ★絶対配置にする */
+  top: -1px; /* 1pxだけ上方向にずらす(※上に1pxの枠線を引いている場合) */
+  left: 100%; /* ★基準位置からの距離を親ボックスの幅100％にする */
+  border-left: 1px solid pink; /* 左側に引く枠線(ピンク色で1pxの実線) */
 }
 /* ▼外枠▼ */
 div.notedesign {
-   border: 2px solid green;   /* 外枠 */
-   padding: 10px;             /* 内側の余白 */
-   background-color: #ffffcc; /* 背景色 */
+  border: 2px solid green; /* 外枠 */
+  padding: 10px; /* 内側の余白 */
+  background-color: #ffffcc; /* 背景色 */
 }
 /* ▼ノート内部▼ */
 div.notedesign p {
-   background-image: url("./img/greendot.gif"); /* 罫線 */
-   line-height: 25px; /* 行の高さ */
-   margin: 0px;       /* 外側の余白 */
+  background-image: url("./img/greendot.gif"); /* 罫線 */
+  line-height: 25px; /* 行の高さ */
+  margin: 0px; /* 外側の余白 */
 }
 /* ▼ノートタイトル▼ */
 div.notedesign p.notetitle {
-   margin: 0px 0px 5px 0px;           /* 外側の余白 */
-   padding: 3px 0px;                  /* 内側の余白 */
-   border-bottom: 3px double #008000; /* 下線 */
-   font-weight: bold;                 /* 文字の太さ */
-   color: #008000;                    /* 文字色 */
+  margin: 0px 0px 5px 0px; /* 外側の余白 */
+  padding: 3px 0px; /* 内側の余白 */
+  border-bottom: 3px double #008000; /* 下線 */
+  font-weight: bold; /* 文字の太さ */
+  color: #008000; /* 文字色 */
 }
 /* ▼ノートタイトルの日付欄▼ */
 div.notedesign p.notetitle span.date {
-   float: right;
+  float: right;
+}
+.footer {
+  background: #fff;
+  color: #000;
+  padding: 40px 60px;
+  border-top: 1px solid #ddd;
+}
+
+.footer-top, .footer-middle {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.footer-column {
+  flex: 1 1 200px;
+  margin: 10px;
+}
+
+.footer-column h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 6px;
+}
+
+.footer-column ul li a {
+  text-decoration: none;
+  color: #000;
+  font-size: 13px;
+}
+
+.footer-column ul li a:hover {
+  text-decoration: underline;
+}
+
+.sns-icons a {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #000;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  font-size: 12px;
+}
+
+.footer-bottom .logo {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.footer-links li {
+  display: inline-block;
+  margin: 0 8px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #000;
+  font-size: 12px;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+#topbutton {
+   /* ▼ボタンの表示位置を画面の右下に固定 */
+   position: fixed; /* ←表示場所を固定 */
+   bottom: 18px;   /* ←下端からの距離 */
+   right: 18px;    /* ←右端からの距離 */
+   width: 7em;     /* ←横幅 */
+
+   /* ▼最初は非表示にしておく */
+   display: none;
+
+   /* ▼配色・配置・文字の装飾など */
+   background-color: #2525aa; /* ←背景色 */
+   opacity: 0.75;        /* ←透明度 */
+   border-radius: 24px;  /* ←角丸の半径 */
+   text-align: center;  /* ←文字の位置 */
+   font-size: 120%;     /* ←文字サイズ */
+   font-weight: bold;   /* ←文字の太さ */
+   margin: 0px;          /* ←外側の余白 */
+   padding: 10px;       /* ←内側の余白 */
+}
+#topbutton a {
+   /* ▼リンクの装飾 */
+   color: white;          /* ←文字色 */
+   text-decoration: none; /* ←下線なし */
+}
+#topbutton a:hover {
+   /* ▼マウスが載ったときの装飾 */
+   color: yellow;              /* ←文字色 */
+   text-decoration: underline; /* ←下線あり */
 }

@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js" type="text/javascript"></script>
+      <link rel="stylesheet" href="style.css">
 <title>Open House 社内向け土地・家シミュレーター 完全版</title>
 <style>
-body { margin:0; font-family:"Hiragino Kaku Gothic ProN","Yu Gothic UI",Meiryo,sans-serif; background:#f5f8fa; color:#222; }
-header { background:#27c4a3; color:#fff; padding:12px 20px; text-align:center; font-size:22px; font-weight:bold; }
+body { margin:0; font-family:"Hiragino kaku Gothic ProN","Yu Gothic UI",Meiryo,sans-serif; background:#f5f8fa; color:#222; }
+header { background:#b9baff; color:#fff; padding:12px 20px; text-align:center; font-size:22px; font-weight:bold; }
 #controls { display:flex; flex-wrap:wrap; gap:12px; padding:12px 20px; background:#e0f0ec; align-items:flex-end; }
 #controls > div { display:flex; flex-direction:column; }
 label { font-size:12px; margin-bottom:4px; }
@@ -23,8 +25,56 @@ canvas { display:block; background:#f0f0f0; }
 .garden { fill:#88cc88; stroke:#558844; }
 .parking { fill:#cccccc; stroke:#888888; }
 </style>
+   <script type="text/javascript">
+   $(function(){
+      // ▼マウスが載ったらサブメニューを表示
+      $("ul.ddmenu li").mouseenter(function(){
+         $(this).siblings().find("ul").hide();  // 兄弟要素に含まれるサブメニューを全部消す。
+         $(this).children().slideDown(150);     // 自分のサブメニューを表示する。
+      });
+      // ▼どこかがクリックされたらサブメニューを消す
+      $('html').click(function() {
+         $('ul.ddmenu ul').slideUp(150);
+      });
+   });
+</script>
 </head>
 <body>
+       <ul class="ddmenu">
+         <li><a href="https://oh.openhouse-group.com/">Open House ホーム</a></li>
+   <li><a href="./index.html">ホーム</a></li>
+   <li><a href="./tool.html">ツール</a>
+      <ul>
+         <li><a href="./house syumire-ta-.html">土地・家シミュレーター</a>
+         <li><a href="#">空き家検索 &raquo;</a>
+            <ul>
+               <li><a href="#">閲覧</a></li>
+               <li><a href="#">投稿</a></li>
+               <li><a href="#">報告</a></li>
+            </ul>
+         </li></li>
+      </ul>
+   </li>
+         <li>
+            <a href="#">ヘルプ</a>
+            <ul>
+               <li><a href="#">このサイトについて</a></li>
+               <li><a href="#">何か提案がある人は</a></li>
+               <li><a href="#">ヘルプ</a>
+            </li>
+            </ul>
+         </li>
+         <li>
+            <a href="#">Language</a>
+            <ul>
+               <li><a href="#">日本語</a></li>
+               <li><a href="#">English</a></li>
+            </li>
+            </ul>
+         </li>
+      </ul>
+   </li>
+</ul>
 <header>Open House 社内向け土地・家シミュレーター 完全版</header>
 <div id="controls">
   <div>
@@ -191,5 +241,6 @@ document.getElementById('generateBtn').addEventListener('click', ()=>{
 // 初期描画
 drawAll();
 </script>
+
 </body>
 </html>
