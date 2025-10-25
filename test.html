@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+</head>
+<body>
+  <section class="fade-section">
+    <h1>見出し1</h1>
+    <p>スクロールするとフェードインします</p>
+  </section>
+
+  <section class="fade-section">
+    <h1>見出し2</h1>
+    <p>こちらも同じようにフェードイン</p>
+  </section>
+
+  <section class="fade-section">
+    <h1>見出し3</h1>
+    <p>最後のセクションです</p>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+<style>
+  body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+section {
+  min-height: 100vh; /* 画面いっぱいの高さ */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0; /* 初期状態は透明 */
+  transform: translateY(50px); /* 少し下にずらす */
+  transition: opacity 1s ease-out, transform 1s ease-out; /* アニメーション */
+  background-color: #f0f0f0;
+  margin-bottom: 20px;
+}
+
+section.fade-in {
+  opacity: 1;
+  transform: translateY(0); /* 元の位置に戻す */
+}
+</style>
+<script>
+  const sections = document.querySelectorAll('.fade-section');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('fade-in');
+      observer.unobserve(entry.target); // 一度フェードインしたら監視を外す
+    }
+  });
+}, { threshold: 0.2 }); // 20%見えたら発火
+
+sections.forEach(section => {
+  observer.observe(section);
+});
+</script>
+</html>

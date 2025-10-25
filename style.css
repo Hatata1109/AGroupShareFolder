@@ -1,7 +1,7 @@
 ul.ddmenu {
   margin: 0px; /* メニューバー外側の余白(ゼロ) */
   padding: 0px 0px 0px 15px; /* メニューバー内側の余白(左に15px) */
-  background-image: linear-gradient(90deg, #ff0000, #ffdfdf);
+  background-image: linear-gradient(90deg, #ffbb00, #ff6600);
 }
 ul.ddmenu li {
   width: 160px; /* メニュー項目の横幅(125px) */
@@ -10,8 +10,8 @@ ul.ddmenu li {
   position: relative; /* ★サブメニュー表示の基準位置にする */
 }
 ul.ddmenu a {
-  background-image: linear-gradient(90deg, #ffc996, #ff9e00);
-  color: white; /* メニュー項目の文字色(白色) */
+  background-color: white;
+  color: rgb(255, 145, 0); /* メニュー項目の文字色(白色) */
   line-height: 50px; /* メニュー項目のリンクの高さ(40px) */
   text-align: center; /* メインメニューの文字列の配置(中央寄せ) */
   text-decoration: none; /* メニュー項目の装飾(下線を消す) */
@@ -53,27 +53,27 @@ ul.ddmenu ul ul {
 }
 /* ▼外枠▼ */
 div.notedesign {
-  border: 2px solid green; /* 外枠 */
-  padding: 10px; /* 内側の余白 */
-  background-color: #ffffcc; /* 背景色 */
+   border: 2px solid green;   /* 外枠 */
+   padding: 10px;             /* 内側の余白 */
+   background-color: #ffffcc; /* 背景色 */
 }
 /* ▼ノート内部▼ */
 div.notedesign p {
-  background-image: url("./img/greendot.gif"); /* 罫線 */
-  line-height: 25px; /* 行の高さ */
-  margin: 0px; /* 外側の余白 */
+   background-image: url("./img/greendot.gif"); /* 罫線 */
+   line-height: 25px; /* 行の高さ */
+   margin: 0px;       /* 外側の余白 */
 }
 /* ▼ノートタイトル▼ */
 div.notedesign p.notetitle {
-  margin: 0px 0px 5px 0px; /* 外側の余白 */
-  padding: 3px 0px; /* 内側の余白 */
-  border-bottom: 3px double #008000; /* 下線 */
-  font-weight: bold; /* 文字の太さ */
-  color: #008000; /* 文字色 */
+   margin: 0px 0px 5px 0px;           /* 外側の余白 */
+   padding: 3px 0px;                  /* 内側の余白 */
+   border-bottom: 3px double #008000; /* 下線 */
+   font-weight: bold;                 /* 文字の太さ */
+   color: #008000;                    /* 文字色 */
 }
 /* ▼ノートタイトルの日付欄▼ */
 div.notedesign p.notetitle span.date {
-  float: right;
+   float: right;
 }
 .footer {
   background: #fff;
@@ -187,4 +187,104 @@ div.notedesign p.notetitle span.date {
    /* ▼マウスが載ったときの装飾 */
    color: yellow;              /* ←文字色 */
    text-decoration: underline; /* ←下線あり */
+}
+
+/* 全体の横並びレイアウト */
+.wrapper {
+  display: flex;
+  align-items: flex-start; /* 上揃えに変更 */
+  justify-content: flex-start; /* 左寄せに変更 */
+  gap: 40px; /* 少し狭く */
+  max-width: 1100px;
+  margin-left: 80px; /* ページ左から少し余白 */
+}
+
+/* 左側：写真 */
+.image-area {
+  position: relative;
+  width: 280px;
+  height: 230px;
+}
+
+.image-area img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  position: absolute;
+  transition: transform 0.3s;
+}
+
+.image-area .img1 {
+  top: 0;
+  left: 0;
+  transform: rotate(-8deg);
+  z-index: 2;
+}
+
+.image-area .img2 {
+  top: 30px;
+  left: 40px;
+  transform: rotate(5deg);
+  z-index: 1;
+}
+
+/* 右側：背景 */
+.text-bg {
+  background: #fdf5c9; /* 明るい紙色 */
+  padding: 40px 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+/* 白い吹き出し部分 */
+.text-box {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  line-height: 1.9;
+  font-size: 16px;
+  color: #333;
+  max-width: 1000px;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  align-items: center;
+}
+
+.title2 {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #222;
+  display: flex;
+  justify-content: center;
+}
+
+.title2 span {
+    font-size: 3rem;
+
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.6s ease;
+}
+
+.title2 span.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+section {
+  opacity: 0; /* 初期状態は透明 */
+  transform: translateY(50px); /* 少し下にずらす */
+  transition: opacity 1s ease-out, transform 1s ease-out; /* アニメーション */
+  background-color: #ffffff;
+  margin-bottom: 20px;
+}
+
+section.fade-in {
+  opacity: 1;
+  transform: translateY(0); /* 元の位置に戻す */
 }
